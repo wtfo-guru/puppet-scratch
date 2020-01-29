@@ -5,14 +5,20 @@
 # @example
 #   include scratch
 class scratch {
-  $scratch = '/var/tmp/scratch.wtf'
-  $bogus = '/bogus/path/surely/does/not/exist/scratch.wtf'
-  exec { "touch ${scratch}":
-    creates => $scratch
+  case $facts['kernel'] {
+    'linux': {
+      $scratch = '/var/tmp/scratch.wtf'
+      $bogus = '/bogus/path/surely/does/not/exist/scratch.wtf'
+      exec { "touch ${scratch}":
+        creates => $scratch,
+        path    => ['/usr/bin', '/bin'],
+      }
+
+      $se = scratch::existence($scratch)
+      $be = scratch::existence($bogus)
+
+      notify { "scratch exists: ${se}\nbogus exists: ${be}": }
+    }
+    default: {}
   }
-
-  $se = scratch::existence($scratch)
-  $be = scratch::existence($bogus)
-
-  notify { "scratch exists: ${se}\nbogus exists: ${be}"}
 }

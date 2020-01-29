@@ -1,4 +1,4 @@
-Puppet::Functions::create_function(:'scratch::existence') do
+Puppet::Functions.create_function(:'scratch::existence') do
   dispatch :check do
     param 'String', :some_string
   end
