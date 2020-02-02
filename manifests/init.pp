@@ -7,18 +7,24 @@
 class scratch {
   case $facts['kernel'] {
     'linux': {
-      $scratch = '/var/tmp/scratch.wtf'
-      $bogus = '/bogus/path/surely/does/not/exist/scratch.wtf'
-      exec { "touch ${scratch}":
-        creates => $scratch,
-        path    => ['/usr/bin', '/bin'],
+      # $scratch = '/var/tmp/scratch.wtf'
+      # $bogus = '/bogus/path/surely/does/not/exist/scratch.wtf'
+      # exec { "touch ${scratch}":
+      #   creates => $scratch,
+      #   path    => ['/usr/bin', '/bin'],
+      # }
+
+      # $se = scratch::existence($scratch)
+      # $be = scratch::existence($bogus)
+
+      # notify { "scratch exists: ${se}\nbogus exists: ${be}": }
+      $scratch_yaml = '/tmp/scratch.yaml'
+      $scratch = loadyaml($scratch_yaml, { 'status' => 'failed to load or parse'})
+      scratch::capture { 'scratch':
+        value => $scratch
       }
-
-      $se = scratch::existence($scratch)
-      $be = scratch::existence($bogus)
-
-      notify { "scratch exists: ${se}\nbogus exists: ${be}": }
     }
     default: {}
   }
+
 }
